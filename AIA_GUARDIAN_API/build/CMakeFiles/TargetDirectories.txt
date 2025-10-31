@@ -1,0 +1,3 @@
+D:/C++Projects/AIA_GUARDIAN_API/build/CMakeFiles/AIA_GUARDIAN_API.dir
+D:/C++Projects/AIA_GUARDIAN_API/build/CMakeFiles/edit_cache.dir
+D:/C++Projects/AIA_GUARDIAN_API/build/CMakeFiles/rebuild_cache.dir
