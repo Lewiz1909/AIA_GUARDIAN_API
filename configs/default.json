@@ -1,0 +1,62 @@
+{
+  "system": {
+    "name": "AIA_GUARDIAN_CONFIGURATION_API",
+    "version": "1.0.0",
+    "environment": "development"
+  },
+
+  "server": {
+    "host": "minio.com",
+    "IPv4": "127.0.0.1",
+    "IPv6": "::ffff:7f00:1",
+    "port": 8000,
+    "enable_https": true
+  },
+  "evaluation": {
+    "criteria": [
+      {
+        "id": "EVAL001",
+        "name": "Data Security Compliance",
+        "weight": 0.4,
+        "pass" : true,
+        "rules": [
+          "encryption_enabled",
+          "secure_storage",
+          "data_retention_policy"
+        ]
+      },
+      {
+        "id": "EVAL002",
+        "name": "System Reliability",
+        "weight": 0.3,
+        "pass" : false,
+        "rules": [
+          "uptime_monitoring",
+          "redundancy_check"
+        ]
+      },
+      {
+        "id": "EVAL003",
+        "name": "AI Governance & Transparency",
+        "weight": 0.3,
+        "pass" : true,
+        "rules": [
+              "model_version_logged",
+              "decision_explanation_required",
+              "user_feedback_loop_enabled"
+        ],
+        "description": "Ensures that all AI actions are transparent, documented, and accountable."
+      }
+    ],
+    "scoring": {
+      "pass_threshold": 70,
+      "warning_threshold": 60,
+      "failed_threshold": 40
+    },
+
+    "output": {
+      "save_results": true,
+      "log_file": "logs/evaluation_report.json"
+    }
+  }
+}

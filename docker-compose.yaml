@@ -1,0 +1,59 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: aia_minio
+    command: server /data --console-address ":9001"
+    environment:
+      # For local development only — override via env file or CI in real deployments
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000" # S3-compatible API
+      - "9001:9001" # MinIO web console
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://127.0.0.1:9000/minio/health/ready || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - localdev
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: aia_postgres
+    environment:
+      # For local development only — override as appropriate
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpassword
+      POSTGRES_DB: submissions_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pguser -d submissions_db || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - localdev
+
+volumes:
+  minio_data:
+    name: aia_minio_data
+  pgdata:
+    name: aia_pgdata
+
+networks:
+  localdev:
+    driver: bridge
