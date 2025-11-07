@@ -6,6 +6,7 @@
 #include<iostream>
 #include<httplib.h>
 #include<fstream>
+#include<filesystem>
 using json = nlohmann::json;
 int main() {
     std::unordered_set<int> Submission; 
@@ -177,6 +178,27 @@ int main() {
         res.set_content(submission.dump(4), "application/json");
     });
 
+
+    server.Get("/reports", [&](const httplib::Request& req, httplib::Response& res){
+
+        json out;
+        out["data"] = json::array();  
+
+        for (auto& file : std::filesystem::directory_iterator("data")) {
+            if (file.path().extension() == ".json") {
+
+                std::string stem = file.path().stem().string(); 
+                try {
+                    int id = std::stoi(stem);
+                    out["data"].push_back(id);
+                }
+                catch(...) {}
+            }
+        }
+
+        res.set_content(out.dump(4), "application/json");
+    });
+    
     /* LISTENING TO SERVERS */
         std::cout << "server on http://127.0.0.1:8000\n";
         server.listen("127.0.0.1", 8000);
